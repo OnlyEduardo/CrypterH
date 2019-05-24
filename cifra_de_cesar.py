@@ -9,9 +9,7 @@ from tkinter import *
 
 class cifra_de_cesar_GUI:
     def __init__(self, master=None):
-        pass
 
-    def cesar(self, master):
         self.fontedefault = ("Arial", "10")
 
         self.conteiner01 = Frame(master)
