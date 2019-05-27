@@ -6,11 +6,31 @@
 
 import hashlib
 from tkinter import *
-from tkinter.ttk import *
+from tkinter.ttk import Notebook
+from tkinter.messagebox import *
+from datetime import *
 
-creditos = "Encrypter/Decrypter - 2019.\n" \
+try:
+   with open('resultados.txt', 'r') as f:
+       pass
+except FileNotFoundError:
+    criaarquivo = open("resultados.txt", "w")
+    criaarquivo.close()
+
+dia = datetime.now()
+print("Encrypter/Decrypter - 2019.\n"
+      "\nPrograma feito por: Eduardo Ribeiro Leal\n"
+      "<eduardoleal.contact@gmail.com>\n\nSeus resultados:\n")
+
+creditos = "\n\nEncrypter/Decrypter - 2019.\n" \
            "\nPrograma feito por: Eduardo Ribeiro Leal\n" \
            "<eduardoleal.contact@gmail.com>\n\n"
+
+
+results = open("resultados.txt", "r")
+conteudo = results.readlines()
+conteudo.append("\n\nResuldados do dia {}\n\n".format(dia))
+
 
 class Main:
     def __init__(self, master):
@@ -73,7 +93,7 @@ class Main:
         self.rotLabel = Label(self.conteiner05,
                               text="Resultado: ", font=self.fontedefault)
         self.rotLabel.pack(side=LEFT)
-        self.mensagem = Label(self.conteiner05, text="...", font=self.fontedefault)
+        self.mensagem = Label(self.conteiner05, text="__________________", font=self.fontedefault)
         self.mensagem.pack(side=LEFT)
         # FIM ABA 1
         # self.label1 = Label(self.frame_aba1, text="Esta é a aba 1")
@@ -115,7 +135,7 @@ class Main:
         self.Codificar2["command"] = self.codifica_md5
         self.Codificar2.pack(side=LEFT, padx=12)
 
-        self.mensagem2 = Label(self.counta5, text="Resultado: ...", font=self.fontedefault)
+        self.mensagem2 = Label(self.counta5, text="Resultado: __________________", font=self.fontedefault)
         self.mensagem2.pack(side=LEFT)
         # FIM ABA 2
         # self.label2 = Label(self.frame_aba2, text="Esta é a aba 2")
@@ -158,7 +178,7 @@ class Main:
         self.Codificar3["command"] = self.codifica_sha1
         self.Codificar3.pack(side=LEFT, padx=12)
 
-        self.mensagem3 = Label(self.counta5o, text="Resultado: ...", font=self.fontedefault)
+        self.mensagem3 = Label(self.counta5o, text="Resultado: __________________", font=self.fontedefault)
         self.mensagem3.pack(side=LEFT)
         # FIM ABA 3
         # self.label3 = Label(self.frame_aba3, text="Esta é a aba 3")
@@ -202,7 +222,7 @@ class Main:
         self.Codificar4["command"] = self.codifica_sha256
         self.Codificar4.pack(side=LEFT, padx=12)
 
-        self.mensagem4 = Label(self.conteiner5o, text="Resultado: ...", font=self.fontedefault)
+        self.mensagem4 = Label(self.conteiner5o, text="Resultado: __________________", font=self.fontedefault)
         self.mensagem4.pack(side=LEFT)
 
         # FIM ABA 4
@@ -224,26 +244,32 @@ class Main:
 
         # FIM ABA 5
 
-        self.abas.add(self.frame_aba1, text="Cifra de César")
-        self.abas.add(self.frame_aba2, text="Hash MD5")
-        self.abas.add(self.frame_aba3, text="Hash SHA-1")
-        self.abas.add(self.frame_aba4, text="Hash SHA-256")
-        self.abas.add(self.frame_aba5, text="Créditos")
+        self.abas.add(self.frame_aba1, text="Cifra de César ")
+        self.abas.add(self.frame_aba2, text=" MD5 ")
+        self.abas.add(self.frame_aba3, text=" SHA-1 ")
+        self.abas.add(self.frame_aba4, text=" SHA-256 ")
+        self.abas.add(self.frame_aba5, text=" Créditos ")
         self.abas.pack()
 
     def codifica_cesar(self):
         texto = self.texto.get()
         rot = self.rot.get()
 
+        if rot.isalpha():
+            showinfo(title="Rotação Inválida", message='A rotação "{}", possui valores inválidos\n'
+                                                       'Não use nada além de números entre 0-25'.format(rot))
+            return None
+
         for i in "!@#$%¨&*()_+§¬¢£³²¹/?ºª|<>,.:;~^}{[]-´*":
             if i in texto:
-                self.mensagem["text"] = 'O texto "{}", possui valores inválidos\n' \
-                                        'Não use acentos ou caracteres especiais'.format(texto)
+                showinfo(title="Texto Inválido", message='O texto "{}", possui valores inválidos\n'
+                                                         'Não use caracteres especiais'.format(texto))
                 return None
 
         if rot == "":
             rot = 0
             self.mensagem["text"] = 'O texto "{}", encriptado com rotação {} é: {}'.format(texto, rot, texto)
+            print('O texto "{}", encriptado com rotação {} é: {}'.format(texto, rot, texto))
             return None
 
         rot = int(rot)
@@ -252,7 +278,8 @@ class Main:
         novo_texto = ''
 
         if rot > 26 or rot < 0:
-            self.mensagem["text"] = 'Digite um valor entre 0 e 25\n Digite um valor válido!'
+            showinfo(title="Rotação Inválida", message='A rotação "{}", possui valores inválidos\n'
+                                                       'Não use nada além de números entre 0-25'.format(rot))
             return None
 
         for caractere in texto:
@@ -268,21 +295,31 @@ class Main:
                 novo_texto = novo_texto + caractere
 
         self.mensagem["text"] = 'O texto "{}", encriptado com rotação {} é: {}'.format(texto, rot, novo_texto)
+        print('O texto "{}", encriptado com rotação {} é: {}'.format(texto, rot, novo_texto))
+        conteudo.append('Resultado: "{}", encriptado com rotação {} é: {}\n'.format(texto, rot, novo_texto))
+        results = open('resultados.txt', 'w')
+        results.writelines(conteudo)
 
     def decodifica_cesar(self):
         texto = self.texto.get()
         rot = self.rot.get()
         texto = texto.lower()
 
+        if rot.isalpha():
+            showinfo(title="Rotação Inválida", message='A rotação "{}", possui valores inválidos\n'
+                                                       'Não use nada além de números entre 0-25'.format(rot))
+            return None
+
         for i in "!@#$%¨&*()_+§¬¢£³²¹/?ºª|<>,.:;~^}{[]-´*":
             if i in texto:
-                self.mensagem["text"] = 'O texto "{}", possui valores inválidos\n' \
-                                        'Não use acentos ou caracteres especiais'.format(texto)
+                showinfo(title="Texto Inválido", message='O texto "{}", possui valores inválidos\n'
+                                                         'Não use caracteres especiais'.format(texto))
                 return None
 
         if rot == "":
             rot = 0
             self.mensagem["text"] = 'O texto "{}", decriptado com rotação {} é: {}'.format(texto, rot, texto)
+            print('O texto "{}", decriptado com rotação {} é: {}'.format(texto, rot, texto))
             return None
 
         rot = int(rot)
@@ -307,27 +344,46 @@ class Main:
                 novo_texto = novo_texto + caractere
 
         self.mensagem["text"] = 'O texto "{}", decriptado com rotação {} é: {}'.format(texto, rot, novo_texto)
+        print('O texto "{}", decriptado com rotação {} é: {}'.format(texto, rot, texto))
+        conteudo.append('Resultado: "{}", decriptado com rotação {} é: {}\n'.format(texto, rot, novo_texto))
+        results = open('resultados.txt', 'w')
+        results.writelines(conteudo)
 
     def codifica_md5(self):
         texto = self.texto2.get()
         novo_texto = hashlib.md5(texto.encode()).hexdigest()
 
         self.mensagem2["text"] = 'Resultado: "{}" Em MD5 é: "{}"'.format(texto, novo_texto)
+        print('Resultado: "{}" Em MD5 é: "{}"'.format(texto, novo_texto))
+        conteudo.append('Resultado: "{}" Em MD5 é: "{}"\n'.format(texto, novo_texto))
+        results = open('resultados.txt', 'w')
+        results.writelines(conteudo)
 
     def codifica_sha1(self):
         texto = self.texto3.get()
         novo_texto = hashlib.sha1(texto.encode()).hexdigest()
         self.mensagem3["text"] = 'Resultado: "{}" Em SHA-1 é: "{}"'.format(texto, novo_texto)
+        print('Resultado: "{}" Em SHA-1 é: "{}"'.format(texto, novo_texto))
+        conteudo.append('Resultado: "{}" Em SHA-1 é: "{}"\n'.format(texto, novo_texto))
+        results = open('resultados.txt', 'w')
+        results.writelines(conteudo)
 
     def codifica_sha256(self):
         texto = self.texto4.get()
         novo_texto = hashlib.sha256(texto.encode()).hexdigest()
         self.mensagem4["text"] = 'Resultado: "{}" Em SHA-256 é: "{}"'.format(texto, novo_texto)
+        print('Resultado: "{}" Em SHA-256 é: "{}"'.format(texto, novo_texto))
 
+        conteudo.append('Resultado: "{}" Em SHA-256 é: "{}"\n'.format(texto, novo_texto))
+        results = open('resultados.txt', 'w')
+        results.writelines(conteudo)
 
 root = Tk()
 root.title("Encrypter/Decrypter.\n2019")
-root.geometry("500x250+400+250")
+root.geometry("500x300+400+250")
 Main(root)
-root.iconbitmap('icon.ico')
 root.mainloop()
+conteudo.append('------------------------------------------------------' * 2)
+results = open('resultados.txt', 'w')
+results.writelines(conteudo)
+results.close()
