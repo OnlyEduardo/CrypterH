@@ -1,6 +1,6 @@
 # Encriptador
 
-Cifra de César , com GUI(tkinter).
+Cifra de César,MD5, SHA1, SHA256 , com GUI(tkinter)
 
 Eduardo Ribeiro Leal
 
