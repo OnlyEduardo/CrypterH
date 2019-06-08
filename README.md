@@ -6,4 +6,5 @@ Eduardo Ribeiro Leal
 
 <eduardoleal.contact@gmail.com>
 
-# IFC INSTITUTO FEDERAL CARATINENSE - CAMPUS ARAQUARI - BSI -SEMESTRE 1
+# IFC INSTITUTO FEDERAL CARATINENSE - CAMPUS ARAQUARI - BSI
+Feito no semestre1
